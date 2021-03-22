@@ -1,11 +1,9 @@
-import { useTranslation } from 'react-i18next';
 import { useForm } from 'react-hook-form';
-import randomString, { encryptMessage, postSecret } from '../utils/utils';
+import randomString, { encryptMessage, postSecret, randomPassword } from '../utils/utils';
 import { useState } from 'react';
 import Result from '../displaySecret/Result';
 import {
   Alert,
-  TextField,
   Typography,
   Button,
   Grid,
@@ -13,9 +11,7 @@ import {
 } from '@material-ui/core';
 
 const CreateSecret = () => {
-  const { t } = useTranslation();
   const {
-    register,
     errors,
     handleSubmit,
     setError,
@@ -34,21 +30,16 @@ const CreateSecret = () => {
     plainTextMessage: '',
   });
 
-  const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
-    if (event.ctrlKey && event.key === 'Enter') {
-      handleSubmit(onSubmit)();
-    }
-  };
-
   const onSubmit = async (form: any): Promise<void> => {
     // Use the manually entered password, or generate one
     const pw = form.password ? form.password : randomString();
+    const plainTextMessage = randomPassword();
     setLoading(true);
     try {
       const { data, status } = await postSecret({
         // ToDo: put all this somewhere as general configuration defaults
         expiration: 86400,
-        message: await encryptMessage(form.secret, pw),
+        message: await encryptMessage(plainTextMessage, pw),
         one_time: true,
       });
 
@@ -59,7 +50,7 @@ const CreateSecret = () => {
           customPassword: form.password ? true : false,
           password: pw,
           uuid: data.message,
-          plainTextMessage: form.secret,
+          plainTextMessage: plainTextMessage,
         });
       }
     } catch (e) {
@@ -87,34 +78,20 @@ const CreateSecret = () => {
         onClick={() => clearErrors('secret')}
       />
       <Typography component="h1" variant="h4" align="center">
-        {t('Enter password to encrypt')}
+        {'Welcome to the Secret Sharing portal!'}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
-        <Grid container justifyContent="center" paddingTop={1}>
-          <TextField
-            inputRef={register({ required: true })}
-            multiline={true}
-            name="secret"
-            margin="dense"
-            fullWidth
-            label={t('Secret message')}
-            rows="4"
-            autoFocus={true}
-            onKeyDown={onKeyDown}
-            placeholder={t('Message to encrypt locally in your browser')}
-          />
           <Grid container justifyContent="center">
             <Box p={2} pb={4}>
               <Button variant="contained" disabled={loading}>
                 {loading ? (
-                  <span>{t('Encrypting message...')}</span>
+                  <span>{'Working...'}</span>
                 ) : (
-                  <span>{t('Encrypt!')}</span>
+                  <span>{'Generate Password for me'}</span>
                 )}
               </Button>
             </Box>
           </Grid>
-        </Grid>
       </form>
     </>
   );
