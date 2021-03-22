@@ -3,7 +3,6 @@ import { useForm, UseFormMethods } from 'react-hook-form';
 import randomString, { encryptMessage, postSecret } from '../utils/utils';
 import { useState } from 'react';
 import Result from '../displaySecret/Result';
-import Expiration from './../shared/Expiration';
 import {
   Alert,
   Checkbox,
@@ -20,11 +19,9 @@ import {
 const CreateSecret = () => {
   const { t } = useTranslation();
   const {
-    control,
     register,
     errors,
     handleSubmit,
-    watch,
     setError,
     clearErrors,
   } = useForm({
@@ -52,9 +49,10 @@ const CreateSecret = () => {
     setLoading(true);
     try {
       const { data, status } = await postSecret({
-        expiration: parseInt(form.expiration),
+        // ToDo: put all this somewhere as general configuration defaults
+        expiration: 86400,
         message: await encryptMessage(form.secret, pw),
-        one_time: form.onetime,
+        one_time: true,
       });
 
       if (status !== 200) {
@@ -71,8 +69,6 @@ const CreateSecret = () => {
     }
     setLoading(false);
   };
-
-  const generateDecryptionKey = watch('generateDecryptionKey');
 
   if (result.uuid) {
     return (
@@ -92,7 +88,7 @@ const CreateSecret = () => {
         onClick={() => clearErrors('secret')}
       />
       <Typography component="h1" variant="h4" align="center">
-        {t('Encrypt message')}
+        {t('Enter password to encrypt')}
       </Typography>
       <form onSubmit={handleSubmit(onSubmit)}>
         <Grid container justifyContent="center" paddingTop={1}>
@@ -108,23 +104,13 @@ const CreateSecret = () => {
             onKeyDown={onKeyDown}
             placeholder={t('Message to encrypt locally in your browser')}
           />
-          <Grid container justifyContent="center" marginTop={2}>
-            <Expiration control={control} />
-          </Grid>
-          <Grid container justifyContent="center">
-            <OneTime register={register} />
-            <SpecifyPasswordToggle register={register} />
-          </Grid>
-          {!generateDecryptionKey && (
-            <SpecifyPasswordInput register={register} />
-          )}
           <Grid container justifyContent="center">
             <Box p={2} pb={4}>
               <Button variant="contained" disabled={loading}>
                 {loading ? (
                   <span>{t('Encrypting message...')}</span>
                 ) : (
-                  <span>{t('Encrypt Message')}</span>
+                  <span>{t('Encrypt!')}</span>
                 )}
               </Button>
             </Box>

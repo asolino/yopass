@@ -1,4 +1,6 @@
 {
+  "Enter password to encrypt": "Enter password to encrypt",
+  "Encrypt!": "Encrypt!",
   "Encrypt message": "Encrypt message",
   "Message to encrypt locally in your browser": "Message to encrypt locally in your browser",
   "Secret message": "Secret message",
