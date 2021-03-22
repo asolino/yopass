@@ -91,7 +91,7 @@ const DisplaySecret = () => {
     <Container maxWidth="lg">
       <Grid container direction="column" spacing={1}>
         <Grid item xs={12}>
-          <Typography variant="h5">Enter decryption key</Typography>
+          <Typography variant="h5">Enter Unlock Key</Typography>
           <Typography variant="caption">
             Do not refresh this window as secret might be restricted to one time
             download.
@@ -103,8 +103,8 @@ const DisplaySecret = () => {
             autoFocus
             name="decryptionKey"
             id="decryptionKey"
-            placeholder={t('Decryption Key')}
-            label={t('A decryption key is required, please enter it below')}
+            placeholder={t('Unlock Key')}
+            label={t('Please enter the unlock key provided to you below')}
             value={password}
             error={invalidPassword}
             helperText={invalidPassword && 'Invalid password, please try again'}

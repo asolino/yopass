@@ -35,6 +35,7 @@ const CreateSecret = () => {
     password: '',
     uuid: '',
     customPassword: false,
+    plainTextMessage: '',
   });
 
   const onKeyDown = (event: React.KeyboardEvent<HTMLInputElement>): void => {
@@ -62,6 +63,7 @@ const CreateSecret = () => {
           customPassword: form.password ? true : false,
           password: pw,
           uuid: data.message,
+          plainTextMessage: form.secret,
         });
       }
     } catch (e) {
@@ -77,6 +79,7 @@ const CreateSecret = () => {
         uuid={result.uuid}
         prefix="s"
         customPassword={result.customPassword}
+        plainTextMessage={result.plainTextMessage}
       />
     );
   }

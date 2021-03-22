@@ -3,12 +3,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { useCopyToClipboard } from 'react-use';
 import {
   Button,
+  makeStyles,
   Typography,
-  Table,
-  TableBody,
-  TableCell,
-  TableContainer,
-  TableRow,
+  Grid,
+  Divider,
+  Box,
 } from '@material-ui/core';
 import { useTranslation } from 'react-i18next';
 
@@ -17,66 +16,95 @@ type ResultProps = {
   readonly password: string;
   readonly prefix: 's' | 'f';
   readonly customPassword?: boolean;
+  readonly plainTextMessage: string;
 };
 
-const Result = ({ uuid, password, prefix, customPassword }: ResultProps) => {
+const useStyles = makeStyles(() => ({
+  pre: {
+    backgroundColor: '#ecf0f1',
+    padding: '1px',
+    border: '1px solid #cccccc',
+    display: 'block',
+    fontSize: '14px',
+    borderRadius: '2px',
+    wordWrap: 'break-word',
+    wordBreak: 'break-all',
+  },
+}));
+
+const Result = ({ uuid, password, prefix, customPassword, plainTextMessage }: ResultProps) => {
   const base =
     (process.env.PUBLIC_URL ||
       `${window.location.protocol}//${window.location.host}`) + `/#/${prefix}`;
   const short = `${base}/${uuid}`;
-  const full = `${short}/${password}`;
   const { t } = useTranslation();
+  const classes = useStyles();
+  const [copy, copyToClipboard] = useCopyToClipboard();
+  const generatedPassword = `${plainTextMessage}`
+  const emailText =
+ `Greeting from the Satellogic Security Team\n
+ The following link will give you a ONE TIME ONLY access to a password that is being shared
+ with you: ${short}
+
+ The unlock key for the password is: ${password}
+
+ We strongly recommend to change your password after first login.
+ If you cannot access the secret, or it has been used already, please contact security@satellgic.com.\n
+ Cheers!`;
 
   return (
     <div>
       <Typography variant="h4">{t('Secret stored in database')}</Typography>
       <Typography>
-        {t(
-          'Remember that the secret can only be downloaded once so do not open the link yourself.',
-        )}
-        <br />
-        {t(
-          'The cautious should send the decryption key in a separate communication channel.',
-        )}
-      </Typography>
-      <TableContainer>
-        <Table>
-          <TableBody>
-            {!customPassword && (
-              <Row label={t('One-click link')} value={full} />
+       <Grid container={true} spacing={2} paddingTop={4}>
+       <Grid item={true} xs={12}>
+        <Divider />
+        <Box p={2}>
+          <Typography variant="h5" align={'left'}>
+            {t('Generated Password')}
+          </Typography>
+          <Typography variant="body2" align={'left'}>
+            {t(
+              'Dear Admin: This is the password generated for the user. DO NOT SHARE!'
             )}
-            <Row label={t('Short link')} value={short} />
-            <Row label={t('Decryption Key')} value={password} />
-          </TableBody>
-        </Table>
-      </TableContainer>
+          </Typography>
+          <div>
+            <Button
+            color={copy.error ? 'secondary' : 'primary'}
+            onClick={() => copyToClipboard(generatedPassword)} >
+            <FontAwesomeIcon icon={faCopy} /> {t('Copy')}
+            </Button>
+            <pre id="pre" className={classes.pre}>
+            <p> {generatedPassword}</p>
+            </pre>
+          </div>
+        </Box>
+        <Divider />
+        <Box p={2}>
+          <Typography variant="h5" align={'left'}>
+            {t('Email to share with the recipient')}
+          </Typography>
+          <Typography variant="body2" align={'left'}>
+            {t(
+              'This is a template email you can use to share with the employee you\'re sharing the password with'
+            )}
+          </Typography>
+          <div>
+            <Button
+            color={copy.error ? 'secondary' : 'primary'}
+            onClick={() => copyToClipboard(emailText)} >
+            <FontAwesomeIcon icon={faCopy} /> {t('Copy')}
+            </Button>
+            <pre id="pre" className={classes.pre}>
+            <p> {emailText}</p>
+            </pre>
+          </div>
+        </Box>
+        <Divider />
+        </Grid>
+        </Grid>
+      </Typography>
     </div>
-  );
-};
-
-type RowProps = {
-  readonly label: string;
-  readonly value: string;
-};
-
-const Row = ({ label, value }: RowProps) => {
-  const [copy, copyToClipboard] = useCopyToClipboard();
-  return (
-    <TableRow key={label}>
-      <TableCell width="15">
-        <Button
-          color={copy.error ? 'secondary' : 'primary'}
-          variant="contained"
-          onClick={() => copyToClipboard(value)}
-        >
-          <FontAwesomeIcon icon={faCopy} />
-        </Button>
-      </TableCell>
-      <TableCell width="100" padding="none">
-        <strong>{label}</strong>
-      </TableCell>
-      <TableCell>{value}</TableCell>
-    </TableRow>
   );
 };
 
