@@ -34,7 +34,7 @@ const DisplaySecret = () => {
     paramsPassword ? paramsPassword : '',
   );
   const [secret, setSecret] = useState('');
-  const [fileName, setFileName] = useState('');
+  const [fileName] = useState('');
   const [invalidPassword, setInvalidPassword] = useState(false);
   const { t } = useTranslation();
 
@@ -60,9 +60,6 @@ const DisplaySecret = () => {
         password,
         isFile ? 'binary' : 'utf8',
       );
-      if (isFile) {
-        setFileName(r.filename);
-      }
       setSecret(r.data);
     } catch (e) {
       setInvalidPassword(true);

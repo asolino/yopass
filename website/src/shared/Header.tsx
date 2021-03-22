@@ -25,13 +25,13 @@ export const Header = () => {
       <Toolbar>
         <Typography variant="h6" component="div">
           <Link href={home} color="inherit" underline="none">
-            Yopass
+            Temporary Password Generator and Sharing
             <img
               className={classes.logo}
               width="40"
               height="40"
               alt=""
-              src="yopass.svg"
+              src="favicon.png"
             />
           </Link>
         </Typography>

@@ -16,6 +16,16 @@ export const randomString = (): string => {
   return text;
 };
 
+export const randomPassword = (): string => {
+  let output = '';
+  const charsSet =
+    '!@#$%*()ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  for (let i = 0; i < 22; i++) {
+    output += charsSet.charAt(randomInt(0, charsSet.length));
+  }
+  return output;
+};
+
 const randomInt = (min: number, max: number): number => {
   const byteArray = new Uint8Array(1);
   window.crypto.getRandomValues(byteArray);
