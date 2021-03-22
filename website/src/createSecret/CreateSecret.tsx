@@ -1,19 +1,15 @@
 import { useTranslation } from 'react-i18next';
-import { useForm, UseFormMethods } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import randomString, { encryptMessage, postSecret } from '../utils/utils';
 import { useState } from 'react';
 import Result from '../displaySecret/Result';
 import {
   Alert,
-  Checkbox,
-  FormGroup,
-  FormControlLabel,
   TextField,
   Typography,
   Button,
   Grid,
   Box,
-  InputLabel,
 } from '@material-ui/core';
 
 const CreateSecret = () => {
@@ -130,64 +126,5 @@ export const Error = (props: { message?: string; onClick?: () => void }) =>
       {props.message}
     </Alert>
   ) : null;
-
-export const OneTime = (props: { register: UseFormMethods['register'] }) => {
-  const { t } = useTranslation();
-  return (
-    <FormControlLabel
-      control={
-        <Checkbox
-          id="enable-onetime"
-          name="onetime"
-          inputRef={props.register()}
-          defaultChecked={true}
-          color="primary"
-        />
-      }
-      label={t('One-time download')}
-    />
-  );
-};
-
-export const SpecifyPasswordInput = (props: {
-  register: UseFormMethods['register'];
-}) => {
-  const { t } = useTranslation();
-  return (
-    <Grid container justifyContent="center" xs={5}>
-      <InputLabel>{t('Custom decryption key')}</InputLabel>
-      <TextField
-        fullWidth
-        type="text"
-        id="password"
-        inputRef={props.register()}
-        name="password"
-        variant="outlined"
-        autoComplete="off"
-      />
-    </Grid>
-  );
-};
-
-export const SpecifyPasswordToggle = (props: {
-  register: UseFormMethods['register'];
-}) => {
-  const { t } = useTranslation();
-  return (
-    <FormGroup>
-      <FormControlLabel
-        control={
-          <Checkbox
-            name="generateDecryptionKey"
-            inputRef={props.register()}
-            defaultChecked={true}
-            color="primary"
-          />
-        }
-        label={t('Generate decryption key')}
-      />
-    </FormGroup>
-  );
-};
 
 export default CreateSecret;
